@@ -16,9 +16,10 @@ module.exports = (api, options, rootOptions) => {
       "cordova-plugin-splashscreen": "^5.0.2",
       "cordova-plugin-statusbar": "^2.4.2",
       "cordova-plugin-whitelist": "^1.3.3",
-      "material-design-icons": "^3.0.1",
-      "typeface-roboto": "0.0.54",
-      vuetify: "^1.0.14"
+      "material-design-icons": "latest",
+      "typeface-roboto": "latest",
+      "vuetify": "latest",
+      "babel-polyfill": "latest"
     },
     cordova: {
       plugins: {
@@ -73,28 +74,28 @@ module.exports = (api, options, rootOptions) => {
       var regex = new RegExp(str, "g");
       if (!main.match(regex)) {
         lines.splice(
-          importIndex,
+          importIndex++,
           0,
           'import cordovaLoader from "./plugins/cordovaLoader"'
         );
-        lines.splice(appIndex, 0, "cordovaLoader(() => {");
+        lines.splice(appIndex++, 0, "cordovaLoader(() => {");
         lines.push("})");
       }
 
       let matchs_single = [
         // 'typeface-roboto',
         // 'material-design-icons/iconfont/material-icons.css',
-        // './plugins/vuetify',
+        './plugins/vuetify',
       ];
 
-      // matchs_single.forEach(item => {
-      //   let str = 'import.(\"|\')' +item+ '(\"|\')'
-      //   var regex = new RegExp(str,"g");
-      //   if(!main.match(regex)){
-      //     console.log('Chưa có thư viện '+ item)
-      //     lines.splice(importIndex++,0, 'import "'+item+'"')
-      //   }
-      // });
+      matchs_single.forEach(item => {
+        let str = 'import.(\"|\')' +item+ '(\"|\')'
+        var regex = new RegExp(str,"g");
+        if(!main.match(regex)){
+          console.log('Chưa có thư viện '+ item)
+          lines.splice(importIndex++,0, 'import "'+item+'"')
+        }
+      });
 
       // let matchs_double =[
       //   'vuetify'
@@ -154,7 +155,7 @@ module.exports = (api, options, rootOptions) => {
     );
 
     // create symlinks
-    if (!fs.existsSync("./public/cordova")) {
+    if (!fs.existsSync("./public/cordova")) {     
       fs.symlinkSync("../platforms", "./public/cordova", "dir");
     }
 
