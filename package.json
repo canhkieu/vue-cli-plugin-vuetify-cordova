@@ -1,0 +1,59 @@
+{
+  "_from": "github:canhkieu/vue-cordova",
+  "_id": "vue-cli-plugin-cordova@1.0.0-beta.4",
+  "_inBundle": false,
+  "_location": "/vue-cli-plugin-cordova",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "canhkieu/vue-cordova",
+    "rawSpec": "canhkieu/vue-cordova",
+    "saveSpec": "github:canhkieu/vue-cordova",
+    "fetchSpec": null,
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "github:canhkieu/vue-cordova#03198a7f8e3f0f0f71de52cf5a91e80fa1cafeb9",
+  "_spec": "canhkieu/vue-cordova",
+  "_where": "/media/ken/Work/www/vue-cordova",
+  "author": {
+    "name": "dekimasoon"
+  },
+  "bugs": {
+    "url": "https://github.com/dekimasoon/vue-cli-plugin-cordova/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@vue/cli-shared-utils": "^3.0.0-beta.6",
+    "address": "^1.0.3",
+    "cordova-plugin-device": "^2.0.1",
+    "ejs": "^2.5.7",
+    "html-webpack-include-assets-plugin": "^1.0.4",
+    "portfinder": "^1.0.13"
+  },
+  "deprecated": false,
+  "description": "vue-cli 3.x plugin for Apache Cordova",
+  "devDependencies": {
+    "eslint": "^4.18.2",
+    "eslint-plugin-vue-libs": "^2.1.0",
+    "standard-version": "^4.3.0"
+  },
+  "homepage": "https://github.com/dekimasoon/vue-cli-plugin-cordova#readme",
+  "keywords": [
+    "cordova"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "vue-cli-plugin-cordova",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dekimasoon/vue-cli-plugin-cordova.git"
+  },
+  "scripts": {
+    "release": "standard-version"
+  },
+  "version": "1.0.0-beta.4"
+}
