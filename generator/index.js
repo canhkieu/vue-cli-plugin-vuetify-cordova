@@ -166,8 +166,8 @@ module.exports = (api, options, rootOptions) => {
 
     if (!fs.existsSync("./public/config.xml")) {
       fs.symlinkSync(
-        "./config.xml",
-        "./public/config.xml",
+        "../platforms/browser/www/config.xml",
+        "./public/config.xml"
       );
     }
   });
