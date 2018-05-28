@@ -5,7 +5,8 @@ module.exports = (api, options, rootOptions) => {
     scripts: {
       "cordova-serve": "vue-cli-service cordova-serve",
       "cordova-build": "vue-cli-service build --dest www",
-      "cordova-android": "cordova run android"
+      "cordova-android": "cordova run android",
+      "cordova-ios": "cordova run ios"
     },
     dependencies: {
       "cordova-android": "^7.1.0",
@@ -19,9 +20,9 @@ module.exports = (api, options, rootOptions) => {
       vuetify: "^1.0.18"
     },
     devDependencies: {
-      "material-design-icons": "^3.0.1",
-      "typeface-roboto": "^0.0.54",
-      "babel-polyfill": "^6.26.0"
+      "babel-polyfill": "^6.26.0",
+      "material-design-icons-iconfont": "^3.0.3",
+      "roboto-fontface": "^0.0.54"
     },
     cordova: {
       plugins: {
