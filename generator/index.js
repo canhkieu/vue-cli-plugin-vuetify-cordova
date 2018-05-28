@@ -4,7 +4,8 @@ module.exports = (api, options, rootOptions) => {
   api.extendPackage({
     scripts: {
       "cordova-serve": "vue-cli-service cordova-serve",
-      "cordova-build": "vue-cli-service build --dest www"
+      "cordova-build": "vue-cli-service build --dest www",
+      "cordova-android": "cordova run android"
     },
     dependencies: {
       "cordova-android": "^7.1.0",
@@ -130,7 +131,7 @@ module.exports = (api, options, rootOptions) => {
       //     lines[i] = `  ${lines[i]}`
       //   }
       // }
-      files[mainFile] = lines.reverse().join('\n')
+      files[mainFile] = lines.join('\n')
     }
     // cordovaLoarder.js
     if (isTS) {
