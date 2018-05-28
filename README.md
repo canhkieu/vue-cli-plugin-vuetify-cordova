@@ -6,6 +6,7 @@ $ npm i canhkieu/vue-cordova --save-dev
 $ vue invoke cordova
 $ cordova prepare
 $ npm run cordova-serve
+```
 
 ## License
 MIT
