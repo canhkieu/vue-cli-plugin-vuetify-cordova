@@ -157,6 +157,8 @@ module.exports = (api, options, rootOptions) => {
       ignore + "\n# Cordova\n/www\n/platforms\n/plugins\n"
     );
 
+    fs.unlinkSync('./config.xml')
+    fs.unlinkSync('./public/cordova')
     // create symlinks
     if (!fs.existsSync("./public/cordova")) {
       fs.symlinkSync("../platforms", "./public/cordova", "dir");
@@ -164,8 +166,8 @@ module.exports = (api, options, rootOptions) => {
 
     if (!fs.existsSync("./public/config.xml")) {
       fs.symlinkSync(
-        "../platforms/browser/www/config.xml",
-        "./public/config.xml"
+        "./config.xml",
+        "./public/config.xml",
       );
     }
   });
