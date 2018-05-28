@@ -130,7 +130,7 @@ module.exports = (api, options, rootOptions) => {
       //     lines[i] = `  ${lines[i]}`
       //   }
       // }
-      // files[mainFile] = lines.reverse().join('\n')
+      files[mainFile] = lines.reverse().join('\n')
     }
     // cordovaLoarder.js
     if (isTS) {
