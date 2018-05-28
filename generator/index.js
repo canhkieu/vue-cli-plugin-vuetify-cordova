@@ -16,10 +16,10 @@ module.exports = (api, options, rootOptions) => {
       "cordova-plugin-splashscreen": "^5.0.2",
       "cordova-plugin-statusbar": "^2.4.2",
       "cordova-plugin-whitelist": "^1.3.3",
-      "material-design-icons": "latest",
-      "typeface-roboto": "latest",
-      "vuetify": "latest",
-      "babel-polyfill": "latest"
+      "material-design-icons": "^3.0.1",
+      "typeface-roboto": "^0.0.54",
+      "vuetify": "^1.0.18",
+      "babel-polyfill": "^6.26.0"
     },
     cordova: {
       plugins: {
@@ -55,20 +55,20 @@ module.exports = (api, options, rootOptions) => {
     const main = files[mainFile];
     if (main) {
       const lines = main.split(/\r?\n/g);
-      let index = 0
-        let importIndex =0
-        let appIndex = 0
+      let index = 0;
+      let importIndex = 0;
+      let appIndex = 0;
 
       lines.forEach(line => {
         index++;
         if (line.startsWith("import")) importIndex = index;
         if (line.indexOf("new Vue") > -1) {
-          console.log('Có vue')
+          console.log("Có vue");
           appIndex = index;
           return;
         }
       });
-      console.log(appIndex)
+      console.log(appIndex);
 
       let str = "import.cordovaLoader.from";
       var regex = new RegExp(str, "g");
@@ -85,15 +85,15 @@ module.exports = (api, options, rootOptions) => {
       let matchs_single = [
         // 'typeface-roboto',
         // 'material-design-icons/iconfont/material-icons.css',
-        './plugins/vuetify',
+        "./plugins/vuetify"
       ];
 
       matchs_single.forEach(item => {
-        let str = 'import.(\"|\')' +item+ '(\"|\')'
-        var regex = new RegExp(str,"g");
-        if(!main.match(regex)){
-          console.log('Chưa có thư viện '+ item)
-          lines.splice(importIndex++,0, 'import "'+item+'"')
+        let str = "import.(\"|')" + item + "(\"|')";
+        var regex = new RegExp(str, "g");
+        if (!main.match(regex)) {
+          console.log("Chưa có thư viện " + item);
+          lines.splice(importIndex++, 0, 'import "' + item + '"');
         }
       });
 
@@ -132,7 +132,7 @@ module.exports = (api, options, rootOptions) => {
       //     lines[i] = `  ${lines[i]}`
       //   }
       // }
-      files[mainFile] = lines.join('\n')
+      files[mainFile] = lines.join("\n");
     }
     // cordovaLoarder.js
     if (isTS) {
@@ -155,7 +155,7 @@ module.exports = (api, options, rootOptions) => {
     );
 
     // create symlinks
-    if (!fs.existsSync("./public/cordova")) {     
+    if (!fs.existsSync("./public/cordova")) {
       fs.symlinkSync("../platforms", "./public/cordova", "dir");
     }
 
