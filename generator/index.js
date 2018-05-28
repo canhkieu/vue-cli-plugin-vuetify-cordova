@@ -16,9 +16,11 @@ module.exports = (api, options, rootOptions) => {
       "cordova-plugin-splashscreen": "^5.0.2",
       "cordova-plugin-statusbar": "^2.4.2",
       "cordova-plugin-whitelist": "^1.3.3",
+      vuetify: "^1.0.18"
+    },
+    devDependencies: {
       "material-design-icons": "^3.0.1",
       "typeface-roboto": "^0.0.54",
-      "vuetify": "^1.0.18",
       "babel-polyfill": "^6.26.0"
     },
     cordova: {
