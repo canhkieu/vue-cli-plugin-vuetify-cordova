@@ -22,7 +22,7 @@ module.exports = (api, options, rootOptions) => {
     devDependencies: {
       "babel-polyfill": "^6.26.0",
       "material-design-icons-iconfont": "^3.0.3",
-      "roboto-fontface": "^0.0.54"
+      "roboto-fontface": "^0.9.0"
     },
     cordova: {
       plugins: {
