@@ -1,11 +1,12 @@
 const { info } = require("@vue/cli-shared-utils");
-const { spawn } = require('child_process');
+const { spawn } = require("child_process");
 
 const defaults = {
   mode: "development",
   host: "0.0.0.0",
   port: 8080,
-  https: false
+  https: false,
+  platform: "browser"
 };
 
 module.exports = (api, options) => {
@@ -21,7 +22,7 @@ module.exports = (api, options) => {
         "--open": `open browser on server start`,
         "--host": `specify host (default: ${defaults.host})`,
         "--port": `specify port (default: ${defaults.port})`,
-        "--https": `use https (default: ${defaults.https})`
+        "--https": `use https (default: ${defaults.https})`,
       }
     },
     args => {
@@ -43,24 +44,85 @@ module.exports = (api, options) => {
           https: args.https || projectDevServerOptions.https || defaults.https,
           lanIp: address.ip()
         };
-        const wwwDirPath = api.resolve("www");
-        info("your www/index.html is overwrited.");
-        copyRedirectHtml(serveArgs, wwwDirPath);
-        return api.service.run("serve", serveArgs).then(result=>{
-          let cordovaProcess = spawn('npm', ['run', 'cordova-android'])
 
-          cordovaProcess.stdout.on('data', (data) => {
+        const wwwDirPath = api.resolve("www");
+        info("www/index.html is updated.");
+        copyRedirectHtml(serveArgs, wwwDirPath);
+        return api.service.run("serve", serveArgs).then(result => {
+          let childProcess = null;
+          switch (args._[0]) {
+            case "android":
+              childProcess = spawn("npm", ["run", "cordova-android"]);
+              break;
+            case "ios":
+              childProcess = spawn("npm", ["run", "cordova-ios"]);
+              break;
+            default:
+              console.log(`Open your browser and enter local address`);
+              break;
+          }
+
+          if (childProcess) {
+            childProcess.stdout.on("data", data => {
+              console.log(`Cordova: ${data}`);
+            });
+
+            childProcess.stderr.on("data", data => {
+              console.log(`Cordova: ${data}`);
+            });
+
+            childProcess.on("close", code => {
+              console.log(`Cordova finished with code ${code}`);
+            });
+          }
+        });
+      });
+    }
+  );
+
+  api.registerCommand(
+    "cordova-production",
+    {
+      description: "Cordova build production",
+      usage: "vue-cli-service cordova-production [options]"
+    },
+    args => {
+      const serveArgs = {
+        dest: "www"
+      };
+      info("Preparing for build production...");
+
+      // const wwwDirPath = api.resolve("www");
+      // copyRedirectHtml(serveArgs, wwwDirPath);
+      return api.service.run("build", serveArgs).then(result => {
+        console.log("Build done.");
+        info("Preparing for build app");
+        let childProcess = null;
+        switch (args._[0]) {
+          case "android":
+            childProcess = spawn("cordova", ["build", "android"]);
+            break;
+          case "ios":
+            childProcess = spawn("cordova", ["build", "ios"]);
+            break;
+          default:
+            childProcess = spawn("cordova", ["build", "browser"]);
+            break;
+        }
+
+        if (childProcess) {
+          childProcess.stdout.on("data", data => {
             console.log(`Cordova: ${data}`);
           });
-          
-          cordovaProcess.stderr.on('data', (data) => {
-            console.log(`Cordova stderr: ${data}`);
+
+          childProcess.stderr.on("data", data => {
+            console.log(`Cordova: ${data}`);
           });
-          
-          cordovaProcess.on('close', (code) => {
-            console.log(`Cordova exited with code ${code}`);
+
+          childProcess.on("close", code => {
+            console.log(`Cordova finished with code ${code}`);
           });
-        });
+        }
       });
     }
   );
@@ -81,6 +143,13 @@ module.exports = (api, options) => {
             publicPath: false
           }
         ]);
+      // FIXME: This is a temporary patch.
+      // When the following PR is merged into file-loader, modify it to use cssOutputPath and useRelativePath.
+      // https://github.com/webpack-contrib/file-loader/pull/150
+      webpackConfig.plugin("extract-css").tap(args => {
+        (args[0].filename = "[name].[contenthash:8].css"),
+          (args[0].chunkFilename = "[name].[id].[contenthash:8].css");
+      });
     }
   });
 
@@ -108,5 +177,6 @@ function copyRedirectHtml(args, distDirPath) {
 }
 
 module.exports.defaultModes = {
-  "cordova-serve": "development"
+  "cordova-serve": "development",
+  "cordova-production": "production"
 };

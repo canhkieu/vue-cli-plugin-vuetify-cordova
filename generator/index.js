@@ -3,10 +3,13 @@ module.exports = (api, options, rootOptions) => {
 
   api.extendPackage({
     scripts: {
+      "dev": "vue-cli-service cordova-serve",
       "cordova-serve": "vue-cli-service cordova-serve",
       "cordova-build": "vue-cli-service build --dest www",
       "cordova-android": "cordova run android",
-      "cordova-ios": "cordova run ios"
+      "cordova-ios": "cordova run ios",
+      "cordova-production": "vue-cli-service cordova-production",
+      "production": "vue-cli-service cordova-production"
     },
     dependencies: {
       "cordova-android": "^7.1.0",
@@ -114,7 +117,7 @@ module.exports = (api, options, rootOptions) => {
       //   }
       // });
 
-      console.log(lines);
+      // console.log(lines);
       // lines[topIndex] =
       //   `import 'typeface-roboto';\n` +
       //   `import 'material-design-icons/iconfont/material-icons.css';\n` +

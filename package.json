@@ -1,24 +1,28 @@
 {
-  "_from": "github:canhkieu/vue-cli-plugin-vuetify-cordova",
-  "_id": "vue-cli-plugin-cordova@1.0.0-beta.4",
+  "_from": "vue-cli-plugin-vuetify-cordova",
+  "_id": "vue-cli-plugin-vuetify-cordova@1.0.0-beta.9",
   "_inBundle": false,
-  "_location": "/vue-cli-plugin-cordova",
+  "_integrity": "sha512-V0gLL4SEb0z5xwPKFkgN4/jV24egGIECqGoUHAcb434W9iLPxyDFstgYzlEVd4zHsb5DuL488ILGI2sGtCZMoQ==",
+  "_location": "/vue-cli-plugin-vuetify-cordova",
   "_phantomChildren": {},
   "_requested": {
-    "type": "git",
-    "raw": "canhkieu/vue-cli-plugin-vuetify-cordova",
-    "rawSpec": "canhkieu/vue-cli-plugin-vuetify-cordova",
-    "saveSpec": "github:canhkieu/vue-cli-plugin-vuetify-cordova",
-    "fetchSpec": null,
-    "gitCommittish": null
+    "type": "tag",
+    "registry": true,
+    "raw": "vue-cli-plugin-vuetify-cordova",
+    "name": "vue-cli-plugin-vuetify-cordova",
+    "escapedName": "vue-cli-plugin-vuetify-cordova",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
     "#DEV:/",
     "#USER"
   ],
-  "_resolved": "github:canhkieu/vue-cli-plugin-vuetify-cordova#03198a7f8e3f0f0f71de52cf5a91e80fa1cafeb9",
-  "_spec": "canhkieu/vue-cli-plugin-vuetify-cordova",
-  "_where": "/media/ken/Work/www/vue-cli-plugin-vuetify-cordova",
+  "_resolved": "https://registry.npmjs.org/vue-cli-plugin-vuetify-cordova/-/vue-cli-plugin-vuetify-cordova-1.0.0-beta.9.tgz",
+  "_shasum": "0f490763e6c7504d3445db9762bed9b9622d97f1",
+  "_spec": "vue-cli-plugin-vuetify-cordova",
+  "_where": "/media/ken/Work/vue/demos/cordova-1",
   "author": {
     "name": "dekimasoon"
   },
@@ -54,5 +58,5 @@
   "scripts": {
     "release": "standard-version"
   },
-  "version": "1.0.0-beta.9"
+  "version": "1.0.0-beta.10"
 }
