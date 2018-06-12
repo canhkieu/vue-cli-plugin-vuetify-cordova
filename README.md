@@ -1,12 +1,12 @@
-## Hướng dẫn nhanh
+# Hướng dẫn nhanh
+
 Xem [hướng dẫn đầy đủ](docs/StartGuide.md).
 
-```sh
-$ npm i canhkieu/vue-cordova --save-dev
-$ vue invoke cordova
-$ cordova prepare
+```
+$ vue add vuetify-cordova
 $ npm run cordova-serve
 ```
 
 ## License
+
 MIT

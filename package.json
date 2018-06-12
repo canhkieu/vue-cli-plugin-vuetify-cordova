@@ -1,39 +1,11 @@
 {
-  "_from": "vue-cli-plugin-vuetify-cordova",
-  "_id": "vue-cli-plugin-vuetify-cordova@1.0.0-beta.9",
-  "_inBundle": false,
-  "_integrity": "sha512-V0gLL4SEb0z5xwPKFkgN4/jV24egGIECqGoUHAcb434W9iLPxyDFstgYzlEVd4zHsb5DuL488ILGI2sGtCZMoQ==",
-  "_location": "/vue-cli-plugin-vuetify-cordova",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "tag",
-    "registry": true,
-    "raw": "vue-cli-plugin-vuetify-cordova",
-    "name": "vue-cli-plugin-vuetify-cordova",
-    "escapedName": "vue-cli-plugin-vuetify-cordova",
-    "rawSpec": "",
-    "saveSpec": null,
-    "fetchSpec": "latest"
-  },
-  "_requiredBy": [
-    "#DEV:/",
-    "#USER"
-  ],
-  "_resolved": "https://registry.npmjs.org/vue-cli-plugin-vuetify-cordova/-/vue-cli-plugin-vuetify-cordova-1.0.0-beta.9.tgz",
-  "_shasum": "0f490763e6c7504d3445db9762bed9b9622d97f1",
-  "_spec": "vue-cli-plugin-vuetify-cordova",
-  "_where": "/media/ken/Work/vue/demos/cordova-1",
   "author": {
-    "name": "dekimasoon"
+    "name": "CanhKieu"
   },
-  "bugs": {
-    "url": "https://github.com/dekimasoon/vue-cli-plugin-cordova/issues"
-  },
-  "bundleDependencies": false,
   "dependencies": {
-    "@vue/cli-shared-utils": "^3.0.0-beta.11",
+    "@vue/cli-shared-utils": "^3.0.0-beta.16",
     "address": "^1.0.3",
-    "ejs": "^2.5.7",
+    "ejs": "^2.6.1",
     "html-webpack-include-assets-plugin": "^1.0.4",
     "portfinder": "^1.0.13"
   },
@@ -44,19 +16,20 @@
     "eslint-plugin-vue-libs": "^3.0.0",
     "standard-version": "^4.4.0"
   },
-  "homepage": "https://github.com/dekimasoon/vue-cli-plugin-cordova#readme",
+  "homepage": "https://github.com/canhkieu/vue-cli-plugin-vuetify-cordova",
   "keywords": [
-    "cordova"
+    "cordova",
+    "vuetify cordova"
   ],
   "license": "MIT",
   "main": "index.js",
   "name": "vue-cli-plugin-vuetify-cordova",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dekimasoon/vue-cli-plugin-cordova.git"
+    "url": "git+https://github.com/canhkieu/vue-cli-plugin-vuetify-cordova.git"
   },
   "scripts": {
     "release": "standard-version"
   },
-  "version": "1.0.0-beta.10"
+  "version": "0.0.2"
 }
