@@ -1,21 +1,16 @@
 {
   "author": {
-    "name": "CanhKieu"
+    "name": "CanhKieu",
+    "email": "minhcanhdn0704@gmail.com"
   },
   "dependencies": {
-    "@vue/cli-shared-utils": "^3.0.0-beta.16",
+    "@vue/cli-shared-utils": "^3.0.0-rc.3",
     "address": "^1.0.3",
     "ejs": "^2.6.1",
     "html-webpack-include-assets-plugin": "^1.0.4",
     "portfinder": "^1.0.13"
   },
-  "deprecated": false,
   "description": "Vuetify Cordova plugin. Make the world easy",
-  "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-plugin-vue-libs": "^3.0.0",
-    "standard-version": "^4.4.0"
-  },
   "homepage": "https://github.com/canhkieu/vue-cli-plugin-vuetify-cordova",
   "keywords": [
     "cordova",
@@ -28,8 +23,5 @@
     "type": "git",
     "url": "git+https://github.com/canhkieu/vue-cli-plugin-vuetify-cordova.git"
   },
-  "scripts": {
-    "release": "standard-version"
-  },
-  "version": "0.0.4"
+  "version": "0.0.5"
 }

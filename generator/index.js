@@ -83,6 +83,7 @@ module.exports = (api, options, rootOptions) => {
       files[mainFilePath] = lines.join("\n");
     }
   });
+  api.render("./template");
 
   api.onCreateComplete(() => {
     // let target = path.resolve(__dirname, "../../platforms");
