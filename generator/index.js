@@ -3,13 +3,13 @@ module.exports = (api, options, rootOptions) => {
 
   api.extendPackage({
     scripts: {
-      "dev": "vue-cli-service cordova-serve",
+      dev: "vue-cli-service cordova-serve",
       "cordova-serve": "vue-cli-service cordova-serve",
       "cordova-build": "vue-cli-service build --dest www",
       "cordova-android": "cordova run android",
       "cordova-ios": "cordova run ios",
       "cordova-production": "vue-cli-service cordova-production",
-      "production": "vue-cli-service cordova-production"
+      production: "vue-cli-service cordova-production"
     },
     dependencies: {
       "cordova-android": "^7.1.0",
@@ -140,38 +140,29 @@ module.exports = (api, options, rootOptions) => {
       // }
       files[mainFile] = lines.join("\n");
     }
-    // cordovaLoarder.js
-    if (isTS) {
-      const loader = "src/cordovaLoader";
-      const content = files[`${loader}.js`];
-      files[`${loader}.ts`] = content;
-      delete files[`${loader}.js`];
-    }
   });
 
   api.onCreateComplete(() => {
     // .gitignore - not included in files on postProcessFiles
-    const ignorePath = api.resolve(".gitignore");
-    const ignore = fs.existsSync(ignorePath)
-      ? fs.readFileSync(ignorePath, "utf-8")
-      : "";
-    fs.writeFileSync(
-      ignorePath,
-      ignore + "\n# Cordova\n/www\n/platforms\n/plugins\n"
-    );
-
+    // const ignorePath = api.resolve(".gitignore");
+    // const ignore = fs.existsSync(ignorePath)
+    //   ? fs.readFileSync(ignorePath, "utf-8")
+    //   : "";
+    // fs.writeFileSync(
+    //   ignorePath,
+    //   ignore + "\n# Cordova\n/www\n/platforms\n/plugins\n"
+    // );
     // fs.unlinkSync('./config.xml')
     // fs.unlinkSync('./public/cordova')
     // create symlinks
-    if (!fs.existsSync("./public/cordova")) {
-      fs.symlinkSync("../platforms", "./public/cordova", "dir");
-    }
-
-    if (!fs.existsSync("./public/config.xml")) {
-      fs.symlinkSync(
-        "../platforms/browser/www/config.xml",
-        "./public/config.xml"
-      );
-    }
+    // if (!fs.existsSync("./public/cordova")) {
+    //   fs.symlinkSync("../platforms", "./public/cordova", "dir");
+    // }
+    // if (!fs.existsSync("./public/config.xml")) {
+    //   fs.symlinkSync(
+    //     "../platforms/browser/www/config.xml",
+    //     "./public/config.xml"
+    //   );
+    // }
   });
 };

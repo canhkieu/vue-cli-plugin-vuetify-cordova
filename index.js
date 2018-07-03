@@ -1,5 +1,8 @@
 const { info } = require("@vue/cli-shared-utils");
-const { spawn } = require("child_process");
+const spawn = require("cross-spawn");
+const fs = require("fs");
+const path = require("path");
+const xml2js = require("xml2js");
 
 const defaults = {
   mode: "development",
@@ -22,7 +25,7 @@ module.exports = (api, options) => {
         "--open": `open browser on server start`,
         "--host": `specify host (default: ${defaults.host})`,
         "--port": `specify port (default: ${defaults.port})`,
-        "--https": `use https (default: ${defaults.https})`,
+        "--https": `use https (default: ${defaults.https})`
       }
     },
     args => {
@@ -45,20 +48,28 @@ module.exports = (api, options) => {
           lanIp: address.ip()
         };
 
-        const wwwDirPath = api.resolve("www");
-        info("www/index.html is updated.");
-        copyRedirectHtml(serveArgs, wwwDirPath);
+        let indexUrl = `http://${serveArgs.lanIp}:${serveArgs.port}`;
+        // setConfig(indexUrl);
+        // return;
         return api.service.run("serve", serveArgs).then(result => {
           let childProcess = null;
           switch (args._[0]) {
             case "android":
-              childProcess = spawn("npm", ["run", "cordova-android"]);
+              childProcess = spawn("cordova", [
+                "run",
+                "android",
+                "--index=" + indexUrl
+              ]);
               break;
             case "ios":
-              childProcess = spawn("npm", ["run", "cordova-ios"]);
+              childProcess = spawn("cordova", ["run", "ios"]);
               break;
             default:
-              console.log(`Open your browser and enter local address`);
+              info(
+                "Build servce done. Open your browser and enter local address"
+              );
+              info("npm run cordova android | If you wan run app on android");
+              info("npm run cordova ios | If you wan run app on ios");
               break;
           }
 
@@ -72,7 +83,7 @@ module.exports = (api, options) => {
             });
 
             childProcess.on("close", code => {
-              console.log(`Cordova finished with code ${code}`);
+              console.log(`Cordova build done. Code ${code}`);
             });
           }
         });
@@ -120,60 +131,66 @@ module.exports = (api, options) => {
           });
 
           childProcess.on("close", code => {
-            console.log(`Cordova finished with code ${code}`);
+            console.log(`Cordova build done. Code ${code}`);
           });
         }
       });
     }
   );
 
-  api.chainWebpack(webpackConfig => {
-    if (process.env.NODE_ENV === "production") {
-      webpackConfig.plugin("copy").tap(args => {
-        args[0][0].ignore.push("cordova");
-        args[0][0].ignore.push("config.xml");
-        return args;
-      });
-      webpackConfig
-        .plugin("cordova")
-        .use(require("html-webpack-include-assets-plugin"), [
-          {
-            assets: "cordova.js",
-            append: false,
-            publicPath: false
-          }
-        ]);
-      // FIXME: This is a temporary patch.
-      // When the following PR is merged into file-loader, modify it to use cssOutputPath and useRelativePath.
-      // https://github.com/webpack-contrib/file-loader/pull/150
-      webpackConfig.plugin("extract-css").tap(args => {
-        (args[0].filename = "[name].[contenthash:8].css"),
-          (args[0].chunkFilename = "[name].[id].[contenthash:8].css");
-      });
-    }
-  });
-
-  api.configureWebpack(config => {
-    if (process.env.NODE_ENV === "production") {
-      // Default publicPath is '/'
-      // And it's not working well with the 'file://' protocol
-      config.output.publicPath = "";
-    }
-  });
+  // api.chainWebpack(webpackConfig => {
+  //   if (process.env.NODE_ENV === "production") {
+  //     webpackConfig.plugin("copy").tap(args => {
+  //       args[0][0].ignore.push("cordova");
+  //       args[0][0].ignore.push("config.xml");
+  //       return args;
+  //     });
+  //     webpackConfig
+  //       .plugin("cordova")
+  //       .use(require("html-webpack-include-assets-plugin"), [
+  //         {
+  //           assets: "cordova.js",
+  //           append: false,
+  //           publicPath: false
+  //         }
+  //       ]);
+  //     // FIXME: This is a temporary patch.
+  //     // When the following PR is merged into file-loader, modify it to use cssOutputPath and useRelativePath.
+  //     // https://github.com/webpack-contrib/file-loader/pull/150
+  //     webpackConfig.plugin("extract-css").tap(args => {
+  //       (args[0].filename = "[name].[contenthash:8].css"),
+  //         (args[0].chunkFilename = "[name].[id].[contenthash:8].css");
+  //     });
+  //   }
+  // });
 };
 
-function copyRedirectHtml(args, distDirPath) {
-  const fs = require("fs");
-  const path = require("path");
-  const ejs = require("ejs");
-  const templatePath = path.resolve(__dirname, "./redirect.ejs");
-  const templateStr = fs.readFileSync(templatePath, "utf-8");
-  const htmlStr = ejs.render(templateStr, args);
-  if (!fs.existsSync(distDirPath)) {
-    fs.mkdirSync(distDirPath);
-  }
-  const distPath = path.resolve(distDirPath, "index.html");
-  fs.writeFileSync(distPath, htmlStr);
+function setConfig(url) {
+  var parser = new xml2js.Parser();
+  var xmlBuilder = new xml2js.Builder();
+
+  const configPath = path.resolve(__dirname, "../../config.xml");
+  console.log(configPath);
+  fs.readFile(configPath, function(err, data) {
+    parser.parseString(data, function(err, result) {
+      result.widget.content = { $: { src: url } };
+
+      var xml = xmlBuilder.buildObject(result);
+
+      fs.writeFile(configPath, xml, function(err, data) {
+        if (err) console.log(err);
+        console.log("successfully written our update xml to file");
+      });
+    });
+  });
+
+  // const templateStr = fs.readFileSync(templatePath, "utf-8");
+  // const htmlStr = ejs.render(templateStr, args);
+  // if (!fs.existsSync(distDirPath)) {
+  //   fs.mkdirSync(distDirPath);
+  // }
+  // const distPath = path.resolve(distDirPath, "index.html");
+  // fs.writeFileSync(distPath, htmlStr);
 }
 
 module.exports.defaultModes = {
