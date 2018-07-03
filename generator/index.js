@@ -22,6 +22,8 @@ module.exports = (api, options, rootOptions) => {
     }
   });
 
+  api.render("./template");
+
   api.postProcessFiles(files => {
     // Cập nhật file index.html
     const indexFilePath = "public/index.html";
@@ -83,7 +85,6 @@ module.exports = (api, options, rootOptions) => {
       files[mainFilePath] = lines.join("\n");
     }
   });
-  api.render("./template");
 
   api.onCreateComplete(() => {
     // let target = path.resolve(__dirname, "../../platforms");
