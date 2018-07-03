@@ -1,27 +1,25 @@
 {
+  "name": "vue-cli-plugin-vuetify-cordova",
+  "version": "0.0.6",
+  "description": "Vuetify Cordova plugin. Make the world easy",
+  "license": "MIT",
   "author": {
     "name": "CanhKieu",
     "email": "minhcanhdn0704@gmail.com"
   },
-  "dependencies": {
-    "@vue/cli-shared-utils": "^3.0.0-rc.3",
-    "address": "^1.0.3",
-    "ejs": "^2.6.1",
-    "html-webpack-include-assets-plugin": "^1.0.4",
-    "portfinder": "^1.0.13"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canhkieu/vue-cli-plugin-vuetify-cordova.git"
   },
-  "description": "Vuetify Cordova plugin. Make the world easy",
   "homepage": "https://github.com/canhkieu/vue-cli-plugin-vuetify-cordova",
   "keywords": [
     "cordova",
     "vuetify cordova"
   ],
-  "license": "MIT",
-  "main": "index.js",
-  "name": "vue-cli-plugin-vuetify-cordova",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/canhkieu/vue-cli-plugin-vuetify-cordova.git"
-  },
-  "version": "0.0.6"
+  "devDependencies": {
+    "@vue/cli-shared-utils": "^3.0.0-rc.3",
+    "address": "^1.0.3",
+    "ejs": "^2.6.1",
+    "portfinder": "^1.0.13"
+  }
 }
