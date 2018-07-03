@@ -49,17 +49,23 @@ module.exports = (api, options) => {
         };
 
         let indexUrl = `http://${serveArgs.lanIp}:${serveArgs.port}`;
-        // setConfig(indexUrl);
+
+        let target = path.resolve(__dirname, "../../platforms");
+        let pathSync = path.resolve(__dirname, "../../public/cordova");
+        console.log({ target, pathSync });
+        if (!fs.existsSync(pathSync)) {
+          console.log("Folder /public/cordova not sync with /platforms");
+          console.log("Begin sync and link");
+          fs.symlinkSync(target, pathSync, "dir");
+        }
+        // return;
+        setConfig(indexUrl);
         // return;
         return api.service.run("serve", serveArgs).then(result => {
           let childProcess = null;
           switch (args._[0]) {
             case "android":
-              childProcess = spawn("cordova", [
-                "run",
-                "android",
-                "--index=" + indexUrl
-              ]);
+              childProcess = spawn("cordova", ["run", "android"]);
               break;
             case "ios":
               childProcess = spawn("cordova", ["run", "ios"]);
@@ -103,15 +109,22 @@ module.exports = (api, options) => {
       };
       info("Preparing for build production...");
 
+      // fs.symlinkSync('../platforms', './public/cordova', 'dir')
+
       // const wwwDirPath = api.resolve("www");
       // copyRedirectHtml(serveArgs, wwwDirPath);
+      setConfig();
       return api.service.run("build", serveArgs).then(result => {
-        console.log("Build done.");
-        info("Preparing for build app");
+        info("Preparing for build " + args._[0] + " app");
+        // process.env.OS = "android";
+        // console.log(process.env);
+        // return;
         let childProcess = null;
         switch (args._[0]) {
           case "android":
-            childProcess = spawn("cordova", ["build", "android"]);
+            childProcess = spawn("cordova", ["build", "android"], {
+              env: process.env
+            });
             break;
           case "ios":
             childProcess = spawn("cordova", ["build", "ios"]);
@@ -137,35 +150,13 @@ module.exports = (api, options) => {
       });
     }
   );
-
-  // api.chainWebpack(webpackConfig => {
-  //   if (process.env.NODE_ENV === "production") {
-  //     webpackConfig.plugin("copy").tap(args => {
-  //       args[0][0].ignore.push("cordova");
-  //       args[0][0].ignore.push("config.xml");
-  //       return args;
-  //     });
-  //     webpackConfig
-  //       .plugin("cordova")
-  //       .use(require("html-webpack-include-assets-plugin"), [
-  //         {
-  //           assets: "cordova.js",
-  //           append: false,
-  //           publicPath: false
-  //         }
-  //       ]);
-  //     // FIXME: This is a temporary patch.
-  //     // When the following PR is merged into file-loader, modify it to use cssOutputPath and useRelativePath.
-  //     // https://github.com/webpack-contrib/file-loader/pull/150
-  //     webpackConfig.plugin("extract-css").tap(args => {
-  //       (args[0].filename = "[name].[contenthash:8].css"),
-  //         (args[0].chunkFilename = "[name].[id].[contenthash:8].css");
-  //     });
-  //   }
-  // });
+  api.configureWebpack(config => {
+    config.output.publicPath =
+      process.env.NODE_ENV === "development" ? "/" : "./";
+  });
 };
 
-function setConfig(url) {
+function setConfig(url = "index.html") {
   var parser = new xml2js.Parser();
   var xmlBuilder = new xml2js.Builder();
 
@@ -173,7 +164,9 @@ function setConfig(url) {
   console.log(configPath);
   fs.readFile(configPath, function(err, data) {
     parser.parseString(data, function(err, result) {
-      result.widget.content = { $: { src: url } };
+      result.widget.content = {
+        $: { src: url }
+      };
 
       var xml = xmlBuilder.buildObject(result);
 

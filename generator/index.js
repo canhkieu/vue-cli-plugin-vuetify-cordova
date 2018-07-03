@@ -1,29 +1,12 @@
 module.exports = (api, options, rootOptions) => {
-  const fs = require("fs");
-
   api.extendPackage({
     scripts: {
       dev: "vue-cli-service cordova-serve",
-      "cordova-serve": "vue-cli-service cordova-serve",
-      "cordova-build": "vue-cli-service build --dest www",
-      "cordova-android": "cordova run android",
-      "cordova-ios": "cordova run ios",
-      "cordova-production": "vue-cli-service cordova-production",
-      production: "vue-cli-service cordova-production"
+      prod: "vue-cli-service cordova-production"
     },
-    dependencies: {
-      "cordova-android": "^7.1.0",
-      "cordova-browser": "^5.0.3",
-      "cordova-ios": "^4.5.4",
-      "cordova-plugin-device": "^2.0.1",
-      "cordova-plugin-ionic-webview": "^1.2.0",
-      "cordova-plugin-splashscreen": "^5.0.2",
-      "cordova-plugin-statusbar": "^2.4.2",
-      "cordova-plugin-whitelist": "^1.3.3",
-      vuetify: "^1.0.18"
-    },
+    dependencies: {},
     devDependencies: {
-      "babel-polyfill": "^6.26.0",
+      xml2js: "^0.4.19",
       "material-design-icons-iconfont": "^3.0.3",
       "roboto-fontface": "^0.9.0"
     },
@@ -39,26 +22,37 @@ module.exports = (api, options, rootOptions) => {
     }
   });
 
-  const hasTS = api.hasPlugin("typescript");
-  const routerPath = api.resolve(`./src/router.${hasTS ? "ts" : "js"}`);
-  const hasRouter = fs.existsSync(routerPath);
-  api.render("./templates", { hasTS, hasRouter });
-
   api.postProcessFiles(files => {
-    // index.html
-    const indexHtml = files["public/index.html"];
+    // Cập nhật file index.html
+    const indexFilePath = "public/index.html";
+    const indexHtml = files[indexFilePath];
+    let existCordovaJs = false;
     if (indexHtml) {
       const lines = indexHtml.split(/\r?\n/g).reverse();
       const lastMetaIndex = lines.findIndex(line => line.match(/\s+<meta/));
-      lines[lastMetaIndex] +=
-        `\n    <!-- TODO: You should modify CSP for production build -->` +
-        `\n    <meta http-equiv="Content-Security-Policy" content="default-src gap: data: 'unsafe-inline' 'unsafe-eval' *">`;
+      const titleIndex = lines.findIndex(line => line.match(/\s+<title/));
+
+      lines.forEach(line => {
+        if (line.indexOf("cordova.js") > -1) {
+          existCordovaJs = true;
+          return;
+        }
+      });
+      if (!existCordovaJs) {
+        lines[lastMetaIndex] +=
+          `\n    <!-- TODO: You should modify CSP for production build -->` +
+          `\n    <meta http-equiv="Content-Security-Policy" content="default-src gap: data: 'unsafe-inline' 'unsafe-eval' *">`;
+        lines[
+          titleIndex
+        ] += `\n    <script type="text/javascript" src="<%= process.env.NODE_ENV === 'production' ? './cordova.js' : './cordova/browser/platform_www/cordova.js'%>"></script>`;
+      }
+
       files["public/index.html"] = lines.reverse().join("\n");
     }
-    // main.js
-    const isTS = "src/main.ts" in files;
-    const mainFile = `src/main.${isTS ? "ts" : "js"}`;
-    const main = files[mainFile];
+
+    // Cập nhật file main.js
+    const mainFilePath = "src/main.js";
+    const main = files[mainFilePath];
     if (main) {
       const lines = main.split(/\r?\n/g);
       let index = 0;
@@ -69,12 +63,10 @@ module.exports = (api, options, rootOptions) => {
         index++;
         if (line.startsWith("import")) importIndex = index;
         if (line.indexOf("new Vue") > -1) {
-          console.log("Có vue");
           appIndex = index;
           return;
         }
       });
-      console.log(appIndex);
 
       let str = "import.cordovaLoader.from";
       var regex = new RegExp(str, "g");
@@ -88,61 +80,23 @@ module.exports = (api, options, rootOptions) => {
         lines.push("})");
       }
 
-      let matchs_single = [
-        // 'typeface-roboto',
-        // 'material-design-icons/iconfont/material-icons.css',
-        "./plugins/vuetify"
-      ];
-
-      matchs_single.forEach(item => {
-        let str = "import.(\"|')" + item + "(\"|')";
-        var regex = new RegExp(str, "g");
-        if (!main.match(regex)) {
-          console.log("Chưa có thư viện " + item);
-          lines.splice(importIndex++, 0, 'import "' + item + '"');
-        }
-      });
-
-      // let matchs_double =[
-      //   'vuetify'
-      // ]
-
-      // matchs_double.forEach(item => {
-      //   let str = 'import.'+item+'.from.(\"|\')'+item+'(\"|\')'
-      //   var regex = new RegExp(str,"g");
-      //   if(!main.match(regex)){
-      //     console.log('Chưa có thư viện '+ item)
-      //     lines.push('Vue.use("'+item+'")')
-      //     lines.push('import '+item+' from "'+item+'"')
-      //   }
-      // });
-
-      // console.log(lines);
-      // lines[topIndex] =
-      //   `import 'typeface-roboto';\n` +
-      //   `import 'material-design-icons/iconfont/material-icons.css';\n` +
-      //   `import 'vuetify/dist/vuetify.css';\n` +
-      //   lines[topIndex]
-      // const lastImportIndex = lines.findIndex(line => line.match(/^import/))
-      // lines[lastImportIndex] +=
-      //   `\nimport cordovaLoader from './cordovaLoader';` +
-      //   `\nimport vuetify from 'vuetify';`
-      // const startAt = lines[0] === '' ? 1 : 0
-      // const declareVueIndex = lines.findIndex(line => line.match(/new Vue/))
-      // for (let i = startAt; i <= declareVueIndex; i++) {
-      //   if (i === startAt) {
-      //     lines[i] = `  ${lines[i]}\n});`
-      //   } else if (i === declareVueIndex) {
-      //     lines[i] = `Vue.use(vuetify);\n\ncordovaLoader(() => {\n  ${lines[i]}`
-      //   } else {
-      //     lines[i] = `  ${lines[i]}`
-      //   }
-      // }
-      files[mainFile] = lines.join("\n");
+      files[mainFilePath] = lines.join("\n");
     }
   });
 
   api.onCreateComplete(() => {
+    // let target = path.resolve(__dirname, "../../platforms");
+    // let pathSync = path.resolve(__dirname, "../../public/cordova");
+    // console.log({ target, pathSync });
+    // if (!fs.existsSync(pathSync)) {
+    //   console.log("Folder /public/cordova not sync with /platforms");
+    //   console.log("Begin sync and link");
+    //   fs.symlinkSync(target, pathSync, "dir");
+    // } else {
+    //   console.log("Folder /public/cordova was synced with /platforms");
+    // }
+    //
+    //
     // .gitignore - not included in files on postProcessFiles
     // const ignorePath = api.resolve(".gitignore");
     // const ignore = fs.existsSync(ignorePath)
