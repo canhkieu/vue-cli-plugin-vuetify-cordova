@@ -115,10 +115,9 @@ module.exports = (api, options) => {
       // copyRedirectHtml(serveArgs, wwwDirPath);
       setConfig();
       return api.service.run("build", serveArgs).then(result => {
+        // setUTF8("www/index.html");
+        // console.log("Updated index.html");
         info("Preparing for build " + args._[0] + " app");
-        // process.env.OS = "android";
-        // console.log(process.env);
-        // return;
         let childProcess = null;
         switch (args._[0]) {
           case "android":
@@ -156,12 +155,28 @@ module.exports = (api, options) => {
   });
 };
 
+// function setUTF8(indexFilePath) {
+//   indexFilePath = path.resolve(__dirname, `../../${indexFilePath}`);
+//   console.log(indexFilePath);
+//   fs.readFile(indexFilePath, "utf8", function(err, data) {
+//     if (err) {
+//       return console.log(err);
+//     }
+//     var result = data.replace(/\.js/gi, ".js charset=utf-8");
+//     console.log(result);
+
+//     fs.writeFile(indexFilePath, result, "utf8", function(err) {
+//       if (err) return console.log(err);
+//     });
+//   });
+// }
+
 function setConfig(url = "index.html") {
   var parser = new xml2js.Parser();
   var xmlBuilder = new xml2js.Builder();
 
   const configPath = path.resolve(__dirname, "../../config.xml");
-  console.log(configPath);
+  // console.log(configPath);
   fs.readFile(configPath, function(err, data) {
     parser.parseString(data, function(err, result) {
       result.widget.content = {
@@ -172,7 +187,7 @@ function setConfig(url = "index.html") {
 
       fs.writeFile(configPath, xml, function(err, data) {
         if (err) console.log(err);
-        console.log("successfully written our update xml to file");
+        console.log(`Updated config.xml: <content src="${url}"/>`);
       });
     });
   });
