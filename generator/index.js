@@ -6,9 +6,9 @@ module.exports = (api, options, rootOptions) => {
     },
     dependencies: {},
     devDependencies: {
-      xml2js: "^0.4.19",
-      "material-design-icons-iconfont": "^3.0.3",
-      "roboto-fontface": "^0.9.0"
+      xml2js: "^0.4.19"
+      // "material-design-icons-iconfont": "^3.0.3",
+      // "roboto-fontface": "^0.9.0"
     },
     cordova: {
       plugins: {
