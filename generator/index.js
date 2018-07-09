@@ -1,12 +1,14 @@
 module.exports = (api, options, rootOptions) => {
   api.extendPackage({
     scripts: {
+      build: "vue-cli-service build --dest www",
       dev: "vue-cli-service cordova-serve",
       prod: "vue-cli-service cordova-production"
     },
     dependencies: {},
     devDependencies: {
-      xml2js: "^0.4.19"
+      xml2js: "^0.4.19",
+      "cross-spawn": "^6.0.5"
       // "material-design-icons-iconfont": "^3.0.3",
       // "roboto-fontface": "^0.9.0"
     },
