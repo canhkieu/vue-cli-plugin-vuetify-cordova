@@ -12,6 +12,14 @@ const defaults = {
   platform: "browser"
 };
 
+const root = path.resolve(__dirname, "../../");
+
+const platformsTarget = path.resolve(root, "platforms");
+const platformsPath = path.resolve(root, "public/cordova");
+
+const configXmlTarget = path.resolve(root, "config.xml");
+const configXmlPath = path.resolve(root, "public/config.xml");
+
 module.exports = (api, options) => {
   const address = require("address");
   const portfinder = require("portfinder");
@@ -50,15 +58,24 @@ module.exports = (api, options) => {
 
         let indexUrl = `http://${serveArgs.lanIp}:${serveArgs.port}`;
 
-        let target = path.resolve(__dirname, "../../platforms");
-        let pathSync = path.resolve(__dirname, "../../public/cordova");
-        console.log({ target, pathSync });
-        if (!fs.existsSync(pathSync)) {
-          console.log("Folder /public/cordova not sync with /platforms");
+        console.log({ platformsTarget, platformsPath });
+
+        if (!fs.existsSync(platformsPath)) {
+          console.log(
+            `${platformsTarget} is not link with ${platformsPath} yet.`
+          );
           console.log("Begin sync and link");
-          fs.symlinkSync(target, pathSync, "dir");
+          fs.symlinkSync(platformsTarget, platformsPath, "dir");
         }
-        // return;
+
+        if (!fs.existsSync(configXmlPath)) {
+          console.log(
+            `${configXmlTarget} is not link with ${configXmlPath} yet.`
+          );
+          console.log("Begin sync and link");
+          fs.symlinkSync(configXmlTarget, configXmlPath);
+        }
+
         setConfig(indexUrl);
         // return;
         return api.service.run("serve", serveArgs).then(result => {
@@ -153,6 +170,17 @@ module.exports = (api, options) => {
     config.output.publicPath =
       process.env.NODE_ENV === "development" ? "/" : "./";
   });
+  // api.chainWebpack(webpackConfig => {
+  //   webpackConfig.module
+  //     .rule("fonts")
+  //     .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/i)
+  //     .use("url-loader")
+  //     .loader("url-loader")
+  //     .options({
+  //       filename: "fonts/[name].[contenthash:8].css",
+  //       publicPath: process.env.NODE_ENV === "production" ? "../fonts" : "/"
+  //     });
+  // });
 };
 
 // function setUTF8(indexFilePath) {

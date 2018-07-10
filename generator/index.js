@@ -1,7 +1,6 @@
 module.exports = (api, options, rootOptions) => {
   api.extendPackage({
     scripts: {
-      build: "vue-cli-service build --dest www",
       dev: "vue-cli-service cordova-serve",
       prod: "vue-cli-service cordova-production"
     },
