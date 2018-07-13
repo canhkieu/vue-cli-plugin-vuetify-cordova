@@ -138,25 +138,23 @@ module.exports = (api, options) => {
         let childProcess = null;
         switch (args._[0]) {
           case "android":
-            childProcess = spawn("cordova", ["build", "android"], {
-              env: process.env
-            });
+            childProcess = spawn("cordova", ["run", "android"]);
             break;
           case "ios":
-            childProcess = spawn("cordova", ["build", "ios"]);
+            childProcess = spawn("cordova", ["run", "ios"]);
             break;
           default:
-            childProcess = spawn("cordova", ["build", "browser"]);
+            childProcess = spawn("cordova", ["run", "browser"]);
             break;
         }
 
         if (childProcess) {
           childProcess.stdout.on("data", data => {
-            console.log(`Cordova: ${data}`);
+            console.log(`${data}`);
           });
 
           childProcess.stderr.on("data", data => {
-            console.log(`Cordova: ${data}`);
+            console.log(`${data}`);
           });
 
           childProcess.on("close", code => {
@@ -166,6 +164,57 @@ module.exports = (api, options) => {
       });
     }
   );
+  api.registerCommand(
+    "cordova-release",
+    {
+      description: "Cordova build production",
+      usage: "vue-cli-service cordova-release [options]"
+    },
+    args => {
+      const serveArgs = {
+        dest: "www"
+      };
+      info("Preparing for release production...");
+
+      // fs.symlinkSync('../platforms', './public/cordova', 'dir')
+
+      // const wwwDirPath = api.resolve("www");
+      // copyRedirectHtml(serveArgs, wwwDirPath);
+      setConfig();
+      return api.service.run("build", serveArgs).then(result => {
+        // setUTF8("www/index.html");
+        // console.log("Updated index.html");
+        info("Preparing for build " + args._[0] + " app");
+        let childProcess = null;
+        switch (args._[0]) {
+          case "android":
+            childProcess = spawn("cordova", ["run", "android", "--release"]);
+            break;
+          case "ios":
+            childProcess = spawn("cordova", ["run", "ios", "--release"]);
+            break;
+          default:
+            childProcess = spawn("cordova", ["run", "browser"]);
+            break;
+        }
+
+        if (childProcess) {
+          childProcess.stdout.on("data", data => {
+            console.log(`${data}`);
+          });
+
+          childProcess.stderr.on("data", data => {
+            console.log(`${data}`);
+          });
+
+          childProcess.on("close", code => {
+            console.log(`Cordova release done. Code ${code}`);
+          });
+        }
+      });
+    }
+  );
+
   api.configureWebpack(config => {
     config.output.publicPath =
       process.env.NODE_ENV === "development" ? "/" : "./";
@@ -183,37 +232,17 @@ module.exports = (api, options) => {
   // });
 };
 
-// function setUTF8(indexFilePath) {
-//   indexFilePath = path.resolve(__dirname, `../../${indexFilePath}`);
-//   console.log(indexFilePath);
-//   fs.readFile(indexFilePath, "utf8", function(err, data) {
-//     if (err) {
-//       return console.log(err);
-//     }
-//     var result = data.replace(/\.js/gi, ".js charset=utf-8");
-//     console.log(result);
-
-//     fs.writeFile(indexFilePath, result, "utf8", function(err) {
-//       if (err) return console.log(err);
-//     });
-//   });
-// }
-
 function setConfig(url = "index.html") {
   var parser = new xml2js.Parser();
   var xmlBuilder = new xml2js.Builder();
 
-  const configPath = path.resolve(__dirname, "../../config.xml");
-  // console.log(configPath);
-  fs.readFile(configPath, function(err, data) {
+  fs.readFile(configXmlTarget, function(err, data) {
     parser.parseString(data, function(err, result) {
-      result.widget.content = {
-        $: { src: url }
-      };
+      result.widget.content = { $: { src: url } };
 
       var xml = xmlBuilder.buildObject(result);
 
-      fs.writeFile(configPath, xml, function(err, data) {
+      fs.writeFile(configXmlTarget, xml, function(err, data) {
         if (err) console.log(err);
         console.log(`Updated config.xml: <content src="${url}"/>`);
       });
@@ -231,5 +260,6 @@ function setConfig(url = "index.html") {
 
 module.exports.defaultModes = {
   "cordova-serve": "development",
-  "cordova-production": "production"
+  "cordova-production": "production",
+  "cordova-release": "production"
 };
