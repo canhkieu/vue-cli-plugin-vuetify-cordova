@@ -91,8 +91,8 @@ module.exports = (api, options) => {
               info(
                 "Build servce done. Open your browser and enter local address"
               );
-              info("npm run cordova android | If you wan run app on android");
-              info("npm run cordova ios | If you wan run app on ios");
+              info("npm run dev android | If you wan run app on android");
+              info("npm run dev ios | If you wan run app on ios");
               break;
           }
 
@@ -144,7 +144,9 @@ module.exports = (api, options) => {
             childProcess = spawn("cordova", ["run", "ios"]);
             break;
           default:
-            childProcess = spawn("cordova", ["run", "browser"]);
+            info("Build project done. Open www to view update.");
+            info("cordova run android | If you wan run app on android");
+            info("cordova run ios | If you wan run app on ios");
             break;
         }
 
