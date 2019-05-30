@@ -24,6 +24,9 @@ module.exports = (api, options) => {
   const address = require("address");
   const portfinder = require("portfinder");
 
+  options.publicPath =
+      process.env.NODE_ENV === "development" ? "/" : "./";
+
   api.registerCommand(
     "cordova-serve",
     {
@@ -217,10 +220,11 @@ module.exports = (api, options) => {
     }
   );
 
-  api.configureWebpack(config => {
-    config.output.publicPath =
-      process.env.NODE_ENV === "development" ? "/" : "./";
-  });
+  //api.configureWebpack(config => {
+  //  config.output.publicPath =
+  //    process.env.NODE_ENV === "development" ? "/" : "./";
+  //});
+  
   // api.chainWebpack(webpackConfig => {
   //   webpackConfig.module
   //     .rule("fonts")
